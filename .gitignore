@@ -1,0 +1,8 @@
+# directories
+.vs/
+MusiBot/bin/
+MusiBot/obj/
+SQL/data/
+
+# Files
+/**/*.yml

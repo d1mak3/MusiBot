@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusiBotProd", "MusiBot\MusiBotProd.csproj", "{6E6275D9-9719-47F7-941E-87D7AF8CF3DF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseUpdateUtility", "DatabaseUpdateUtility\DatabaseUpdateUtility.csproj", "{4AF182DB-7C84-45A6-9A13-AE292501D6FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6E6275D9-9719-47F7-941E-87D7AF8CF3DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E6275D9-9719-47F7-941E-87D7AF8CF3DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E6275D9-9719-47F7-941E-87D7AF8CF3DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E6275D9-9719-47F7-941E-87D7AF8CF3DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AF182DB-7C84-45A6-9A13-AE292501D6FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AF182DB-7C84-45A6-9A13-AE292501D6FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AF182DB-7C84-45A6-9A13-AE292501D6FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AF182DB-7C84-45A6-9A13-AE292501D6FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9CCF5A4A-839F-47FC-8896-051003EEF7BB}
+	EndGlobalSection
+EndGlobal
