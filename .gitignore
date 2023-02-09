@@ -3,7 +3,6 @@
 MusiBot/bin/
 MusiBot/obj/
 SQL/data/
-DatabaseUpdateUtility/
 
 # Files
 /**/*.yml
