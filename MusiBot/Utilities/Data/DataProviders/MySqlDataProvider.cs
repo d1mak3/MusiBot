@@ -18,11 +18,17 @@ namespace MusiBotProd.Utilities.Data.DataProviders
                     databaseConnection.Open();                    
                     break;
                 }
-                catch
+                catch (Exception e)
                 {
+                    Console.WriteLine(e.Message);
                     Thread.Sleep(5000);
                 }                
             }            
+        }
+
+        public void OpenConnection()
+        {
+            databaseConnection.Open();
         }
 
         public List<JObject> Get(string dbName, int dbColumnsCount)

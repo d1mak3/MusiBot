@@ -4,7 +4,9 @@ using Newtonsoft.Json.Linq;
 namespace MusiBotProd.Utilities.Data
 {
     public interface IDataProvider
-    {        
+    {
+        public void OpenConnection();
+
         public void SaveBalance(Balance balance);
 
         public void SaveGuild(Guild guild);

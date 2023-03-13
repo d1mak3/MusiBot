@@ -16,7 +16,8 @@ namespace MusiBot.Modules
             { "flood", 988516628243296297 },
             { "anime", 988521402208509952 },
             { "afk", 476410927374139394 },
-            { "hidden", 476146163343556618 }
+            { "hidden", 476146163343556618 },
+            { "нудистский пляж", 460893065679470596 }
         };
 
         #endregion
@@ -37,7 +38,7 @@ namespace MusiBot.Modules
             }
 
             SocketChannel? channel = (_channelAlias.ContainsKey(channelName.ToLower()) && user.Guild.Id == 460893065679470592) ?
-                user.Guild.GetVoiceChannel(_channelAlias[channelName]) : // if there is alias for the channel, get channel dict
+                user.Guild.GetVoiceChannel(_channelAlias[channelName.ToLower()]) : // if there is alias for the channel, get channel dict
                 user.Guild.VoiceChannels.FirstOrDefault(ch => ch.Name == channelName); // else find by name         
 
             if (channel == null)
@@ -60,15 +61,15 @@ namespace MusiBot.Modules
         [Summary("Move everyone from one channel to another!")]
         [RequireUserPermission(GuildPermission.MoveMembers)]
         [RequireBotPermission(GuildPermission.MoveMembers)]
-        public async Task MoveAllUsers(string channelNameToMoveFrom, string channelNameToMoveIn)
+        public async Task MoveAllUsers(string channelNameToMoveFrom, string channelNameToMoveTo)
         {            
             SocketChannel? channelToMoveFrom = (_channelAlias.ContainsKey(channelNameToMoveFrom.ToLower()) && Context.Guild.Id == 460893065679470592) ?
-                Context.Guild.GetVoiceChannel(_channelAlias[channelNameToMoveFrom]) : // if there is alias for the channel, get channel dict
+                Context.Guild.GetVoiceChannel(_channelAlias[channelNameToMoveFrom.ToLower()]) : // if there is alias for the channel, get channel dict
                 Context.Guild.VoiceChannels.FirstOrDefault(ch => ch.Name == channelNameToMoveFrom); // else find by name
 
-            SocketChannel? channelToMoveIn = (_channelAlias.ContainsKey(channelNameToMoveIn.ToLower()) && Context.Guild.Id == 460893065679470592) ?
-                Context.Guild.GetVoiceChannel(_channelAlias[channelNameToMoveIn]) :
-                Context.Guild.VoiceChannels.FirstOrDefault(ch => ch.Name == channelNameToMoveIn);
+            SocketChannel? channelToMoveTo = (_channelAlias.ContainsKey(channelNameToMoveTo.ToLower()) && Context.Guild.Id == 460893065679470592) ?
+                Context.Guild.GetVoiceChannel(_channelAlias[channelNameToMoveTo.ToLower()]) :
+                Context.Guild.VoiceChannels.FirstOrDefault(ch => ch.Name == channelNameToMoveTo);
 
             if (channelToMoveFrom == null)
             {
@@ -76,7 +77,7 @@ namespace MusiBot.Modules
                 return;
             } 
 
-            if (channelToMoveIn == null)
+            if (channelToMoveTo == null)
             {
                 await ReplyAsync("Channel to move to not found!");
                 return;
@@ -84,7 +85,7 @@ namespace MusiBot.Modules
 
             foreach (SocketGuildUser user in (channelToMoveFrom as SocketVoiceChannel)!.ConnectedUsers)
             {
-               await user.ModifyAsync(u => u.ChannelId = channelToMoveIn.Id);
+               await user.ModifyAsync(u => u.ChannelId = channelToMoveTo.Id);
             }
         }
 

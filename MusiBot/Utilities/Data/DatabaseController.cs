@@ -11,7 +11,9 @@ namespace MusiBotProd.Utilities.Data
         public DatabaseController(IDataProvider dataProvider)
         {
             this.dataProvider = dataProvider;
-            
+
+            dataProvider.OpenConnection();
+
             if (Contexts == null)
             {
                 Contexts = new DataContexts();
