@@ -2,8 +2,13 @@
 
 namespace MusiBotProd.Utilities.Data.Models
 {
+    /// <summary>
+    /// Guild entity
+    /// </summary>
     public class Guild : IModel
     {
+        
+
         public string Id { get; set; }
 
         public JObject ToJObject()

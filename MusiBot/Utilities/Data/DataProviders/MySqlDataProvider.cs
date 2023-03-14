@@ -4,9 +4,18 @@ using MusiBotProd.Utilities.Data.Models;
 
 namespace MusiBotProd.Utilities.Data.DataProviders
 {
+    /// <summary>
+    /// Provider to interact with mysql
+    /// </summary>
     public class MySqlDataProvider : IDataProvider
     {
-        private MySqlConnection databaseConnection;
+        #region readonlies
+
+        private readonly MySqlConnection databaseConnection;
+
+        #endregion
+
+        #region constructors
 
         public MySqlDataProvider(string connectionString)
         {
@@ -25,6 +34,10 @@ namespace MusiBotProd.Utilities.Data.DataProviders
                 }                
             }            
         }
+
+        #endregion
+
+        #region supporting methods
 
         public void OpenConnection()
         {
@@ -247,5 +260,7 @@ namespace MusiBotProd.Utilities.Data.DataProviders
                 command.ExecuteNonQuery();
             }
         }
+
+        #endregion
     }
 }

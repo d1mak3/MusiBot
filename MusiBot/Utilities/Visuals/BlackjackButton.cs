@@ -5,11 +5,20 @@ using MusiBotProd.Utilities.Data.Models;
 
 namespace MusiBotProd.Utilities.Visuals
 {
+    /// <summary>
+    /// Blackjack button definition
+    /// </summary>
     public abstract class BlackjackButton : IButton
     {
+        #region utilities
+
         public SocketMessageComponent? MessageComponent { set; protected get; }
         public IDataProvider? DataProvider { set; protected get; }
         public IDiscordClient? DiscordClient { set; protected get; }
+
+        #endregion
+
+        #region data fields
 
         public string Label { protected set; get; }
         public string CustomId { protected set; get; }
@@ -17,7 +26,11 @@ namespace MusiBotProd.Utilities.Visuals
         public IEmote Emote { protected set; get; }
         public string Url { protected set; get; }
         public bool IsDisabled { protected set; get; }
-        public int Row { protected set; get; }        
+        public int Row { protected set; get; }
+
+        #endregion
+
+        #region constructors
 
         public BlackjackButton(string label = "", string customId = "",
             ButtonStyle style = ButtonStyle.Success, IEmote emote = null,
@@ -31,6 +44,16 @@ namespace MusiBotProd.Utilities.Visuals
             this.IsDisabled = isDisabled;
             this.Row = row;            
         }
+
+        #endregion
+
+        #region execution method
+
+        virtual public Task ExecuteAsync() => Task.CompletedTask;
+
+        #endregion
+
+        #region supporting methods
 
         public void GiveCoinsToUser(string userName, string guildName, int coinsToGive)
         {
@@ -64,6 +87,6 @@ namespace MusiBotProd.Utilities.Visuals
             new DatabaseController(DataProvider).SaveContexts();
         }
 
-        virtual public Task ExecuteAsync() => Task.CompletedTask;
+        #endregion        
     }
 }

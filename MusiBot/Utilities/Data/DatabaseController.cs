@@ -3,10 +3,24 @@ using Newtonsoft.Json.Linq;
 
 namespace MusiBotProd.Utilities.Data
 {
+    /// <summary>
+    /// Database controller which interacts with database API
+    /// </summary>
     public class DatabaseController
     {
-        private IDataProvider dataProvider;
+        #region readonlies
+
+        private readonly IDataProvider dataProvider;
+
+        #endregion
+
+        #region statics
+
         public static DataContexts Contexts { get; private set; }
+
+        #endregion
+
+        #region constructors
 
         public DatabaseController(IDataProvider dataProvider)
         {
@@ -18,6 +32,10 @@ namespace MusiBotProd.Utilities.Data
                 GetContexts();
             }                        
         }
+
+        #endregion
+
+        #region API interaction methods
 
         public void SaveContexts()
         {
@@ -46,6 +64,10 @@ namespace MusiBotProd.Utilities.Data
                 dataProvider.SaveRnGConnection(connection);
             }
         }
+
+        #endregion
+
+        #region supporting methods
 
         private void GetContexts()
         {
@@ -114,5 +136,7 @@ namespace MusiBotProd.Utilities.Data
                 Contexts.UnGConnections.Add(UnGConnection);
             }
         }
+
+        #endregion
     }
 }

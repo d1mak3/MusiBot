@@ -1,15 +1,23 @@
 ﻿using Discord;
-using Discord.WebSocket;
 
 namespace MusiBotProd.Utilities.Visuals.Buttons
 {
+    /// <summary>
+    /// Blackjack stand button
+    /// </summary>
     public class BlackjackStandButton : BlackjackButton
     {
+        #region constructors
+
         public BlackjackStandButton() 
             : base(label: "Stand", customId: "blackjack-standed", style: ButtonStyle.Danger)
         {
             
         }
+
+        #endregion
+
+        #region button functions
 
         public override Task ExecuteAsync()
         {
@@ -122,6 +130,10 @@ namespace MusiBotProd.Utilities.Visuals.Buttons
             return Task.CompletedTask;
         }
 
+        #endregion
+
+        #region supporting methonds
+
         private void LogError(string error)
         {
             string logDirectory = Path.Combine(AppContext.BaseDirectory, "logs");
@@ -135,5 +147,7 @@ namespace MusiBotProd.Utilities.Visuals.Buttons
             string logText = $"{DateTime.UtcNow.ToString("hh:mm:ss")} {error}";
             File.AppendAllText(logFile, logText + "\n");
         }
+
+        #endregion
     }
 }

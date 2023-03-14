@@ -7,11 +7,20 @@ using MusiBotProd.Utilities.Visuals.Buttons;
 
 namespace MusiBot.Services
 {
+    /// <summary>
+    /// Service to handle interactions
+    /// </summary>
     public class InteractionsService
     {
+        #region readonlies
+
         private readonly DiscordSocketClient _discordClient;
         private readonly IDataProvider _dataProvider;
         private readonly List<IButton> buttons = new List<IButton>();
+
+        #endregion
+
+        #region constructors
 
         public InteractionsService(
                 DiscordSocketClient discordClient,
@@ -35,6 +44,10 @@ namespace MusiBot.Services
             buttons.Add(standButton);
         }
 
+        #endregion
+
+        #region interaction handlers
+
         private async Task ButtonsClicksHandler(SocketMessageComponent component)
         {
             foreach (BlackjackButton button in buttons)
@@ -46,5 +59,7 @@ namespace MusiBot.Services
                 }
             }
         }
+
+        #endregion
     }
 }
