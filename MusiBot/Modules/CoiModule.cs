@@ -22,6 +22,7 @@ namespace Example.Modules
         #region constants
 
         private const double TIMESPAN_FOR_EARN = 15.0;
+        private const double TIMESPAN_FOR_INCOME = 12 * 60;
         private const int MIN_EARN = 50;
         private const int MAX_EARN = 100;
 
@@ -137,9 +138,7 @@ namespace Example.Modules
 
                 await ReplyAsync("Successfully added!");
                 return;
-            }
-
-            
+            }            
 
             DatabaseController.Contexts.RnGConnections.Add(new RoleAndGuildConnection
             {
@@ -192,20 +191,40 @@ namespace Example.Modules
                 return;
             }
 
+            int idOfUserAndGuildConnection = DatabaseController.Contexts.UnGConnections
+                .Where(connection =>
+                    connection.UserId == $"{Context.User.Id}" &&
+                    connection.GuildId == $"{Context.Guild.Id}")
+                .First().Id;
+
+            double timePassedFromLastEarning = (DateTime.Now - DatabaseController.Contexts.UnGConnections
+                .Where(connection => connection.Id == idOfUserAndGuildConnection)
+                .First()
+                .RoleIncomeTime).TotalMinutes;
+
+            if (timePassedFromLastEarning < TIMESPAN_FOR_INCOME)
+            {
+                await ReplyAsync($"Wait {((int)TIMESPAN_FOR_INCOME - (int)timePassedFromLastEarning) / 60} hours" +
+                    $" {((int)TIMESPAN_FOR_INCOME - (int)timePassedFromLastEarning) % 60} minutes!");
+
+                return;
+            }
+
             string replyMessage = "";
 
             foreach (RoleAndGuildConnection connection in DatabaseController.Contexts.RnGConnections
                 .Where(connection => connection.GuildId == $"{Context.Guild.Id}"))
             {
-                int idOfUnGConnection = DatabaseController.Contexts.UnGConnections
-                    .Where(connection => connection.UserId == $"{Context.User.Id}" &&
-                                         connection.GuildId == $"{Context.Guild.Id}").First().Id;
-
                 replyMessage += $"You've collected income for {connection.RoleName} - {connection.Income} coin(s)\n";
                 DatabaseController.Contexts.Balances
-                    .Where(balance => balance.IdOfUnGConnection == idOfUnGConnection)
+                    .Where(balance => balance.IdOfUnGConnection == idOfUserAndGuildConnection)
                     .First().AmountOfCoinsInCash += connection.Income;
             }
+
+            DatabaseController.Contexts.UnGConnections
+                .Where(connection => connection.Id == idOfUserAndGuildConnection)
+                .First()
+                .RoleIncomeTime = DateTime.Now;
 
             databaseController.SaveContexts();
 
