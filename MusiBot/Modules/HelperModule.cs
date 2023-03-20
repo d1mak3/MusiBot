@@ -2,7 +2,7 @@
 using Discord.Commands;
 using Microsoft.Extensions.Configuration;
 
-namespace Example.Modules
+namespace MusiBot.Modules
 {
     [Name("Help")]
     public class HelpModule : ModuleBase<SocketCommandContext>

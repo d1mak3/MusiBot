@@ -2,13 +2,22 @@
 
 namespace MusiBotProd.Utilities.Data.Models
 {
+    /// <summary>
+    /// UserAndGuildConnection entity
+    /// </summary>
     public class UserAndGuildConnection : IModel
     {
+        #region data fields
+
         public int Id { get; set; }
         public string UserId { get; set; }
         public string GuildId { get; set; }
         public DateTime EarnTime { get; set; }
         public DateTime RoleIncomeTime { get; set; }
+
+        #endregion
+
+        #region supporting methods
 
         public JObject ToJObject()
         {
@@ -31,5 +40,7 @@ namespace MusiBotProd.Utilities.Data.Models
             EarnTime = (DateTime) jObjectToConvertFrom["3"];
             RoleIncomeTime = (DateTime) jObjectToConvertFrom["4"];
         }
+
+        #endregion
     }
 }

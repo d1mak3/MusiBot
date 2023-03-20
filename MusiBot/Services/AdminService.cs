@@ -12,15 +12,7 @@ namespace MusiBot.Services
         #region readonlies
 
         private readonly DiscordSocketClient _discordClient;        
-        private readonly IConfigurationRoot _configuration;
-
-        private readonly List<ulong> _onlyWithAttachmentsChannelIds = new List<ulong>()
-        {
-            995768670775160904, // photo-flood
-            988518208954847272, // memes
-            873526051853193296, // announcements (streams)
-            705897773689602208  // аниме-картинки 
-        };
+        private readonly IConfigurationRoot _configuration;        
 
         private readonly Dictionary<string, string> _emotesToRoles = new Dictionary<string, string>()
         {
@@ -50,8 +42,7 @@ namespace MusiBot.Services
 
             _discordClient.ReactionAdded += OnRoleReactionAdded;
             _discordClient.ReactionRemoved += OnRoleReactionRemoved;
-            _discordClient.UserJoined += OnUserJoined;
-            _discordClient.MessageReceived += OnMessageReceived;
+            _discordClient.UserJoined += OnUserJoined;            
         }
 
         #endregion
@@ -102,17 +93,6 @@ namespace MusiBot.Services
             await user.AddRoleAsync(
                     _discordClient.GetGuild(Convert.ToUInt64(_configuration["myguildid"]))
                         .Roles.FirstOrDefault(r => r.Name == "Cool guy"));
-        }
-
-        /// <summary>
-        /// Delete message without any attachments in specified channels, when message was received
-        /// </summary>
-        private async Task OnMessageReceived(SocketMessage message)
-        {
-            if (!_onlyWithAttachmentsChannelIds.Contains(message.Channel.Id)) return;
-
-            if (!message.Attachments.Any()) 
-                await message.DeleteAsync();
         }
 
         #endregion

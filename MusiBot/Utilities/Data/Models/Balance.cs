@@ -2,12 +2,21 @@
 
 namespace MusiBotProd.Utilities.Data.Models
 {
+    /// <summary>
+    /// Balance entity
+    /// </summary>
     public class Balance : IModel
     {
+        #region data fields
+
         public int Id { get; set; }
         public int IdOfUnGConnection { get; set; }
         public int AmountOfCoinsOnDeposit { get; set; }
         public int AmountOfCoinsInCash { get; set; }
+
+        #endregion
+
+        #region supporting methods
 
         public JObject ToJObject()
         {
@@ -28,5 +37,7 @@ namespace MusiBotProd.Utilities.Data.Models
             AmountOfCoinsOnDeposit = (int) jObjectToConvertFrom["2"];
             AmountOfCoinsInCash = (int) jObjectToConvertFrom["3"];            
         }
+
+        #endregion
     }
 }
