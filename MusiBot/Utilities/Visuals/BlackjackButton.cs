@@ -84,7 +84,11 @@ namespace MusiBotProd.Utilities.Visuals
 
             balance.AmountOfCoinsInCash += coinsToGive;
 
+            DataProvider.OpenConnection();
+
             new DatabaseController(DataProvider).SaveContexts();
+
+            DataProvider.CloseConnection();
         }
 
         #endregion        

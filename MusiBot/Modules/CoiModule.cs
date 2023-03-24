@@ -45,6 +45,8 @@ namespace Example.Modules
         [Summary("Earn some coins!")]
         public async Task EarnCoins()
         {
+            _dataProvider.OpenConnection();
+
             SocketUser guildUser = Context.User;
 
             AddUserIfNotAdded($"{guildUser.Id}", $"{Context.Guild.Id}");
@@ -63,7 +65,7 @@ namespace Example.Modules
             if (timePassedFromLastEarning < TIMESPAN_FOR_EARN)
             {
                 await ReplyAsync($"Wait {(int) TIMESPAN_FOR_EARN - (int) timePassedFromLastEarning} minutes!");
-
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -82,6 +84,8 @@ namespace Example.Modules
             databaseController.SaveContexts();
 
             await ReplyAsync($"You've earned {earnedCoins} coins!");
+
+            _dataProvider.CloseConnection();
         }
 
         [Command("balance")]
@@ -96,6 +100,7 @@ namespace Example.Modules
                 ))
             {
                 await ReplyAsync("Error: You haven't earned coins on this server yet!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -115,7 +120,9 @@ namespace Example.Modules
 
             int dep = userBalance.AmountOfCoinsOnDeposit;
 
-            await ReplyAsync($"Cash: {cash} coin(s)\nOn deposit: {dep} coins(s)");           
+            await ReplyAsync($"Cash: {cash} coin(s)\nOn deposit: {dep} coins(s)");
+
+            _dataProvider.CloseConnection();
         }
 
         [Command("add_role_income")]
@@ -124,9 +131,12 @@ namespace Example.Modules
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task AddIncome(string roleName, int income)
         {
+            _dataProvider.OpenConnection();
+
             if (!Context.Guild.Roles.Any(role => role.Name == roleName))
             {
                 await ReplyAsync("No such role!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -137,6 +147,7 @@ namespace Example.Modules
                     .First().Income = income;
 
                 await ReplyAsync("Successfully added!");
+                _dataProvider.CloseConnection();
                 return;
             }            
 
@@ -153,6 +164,8 @@ namespace Example.Modules
             databaseController.SaveContexts();
 
             await ReplyAsync("Successfully added!");
+
+            _dataProvider.CloseConnection();
         }
 
         [Command("check_roles_income")]
@@ -161,10 +174,13 @@ namespace Example.Modules
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task CheckIncomes()
         {
+            _dataProvider.OpenConnection();
+
             if (!DatabaseController.Contexts.RnGConnections
                 .Any(connection => connection.GuildId == $"{Context.Guild.Id}"))
             {
                 await ReplyAsync("No roles with income on this server!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -177,6 +193,8 @@ namespace Example.Modules
             }
 
             await ReplyAsync(replyMessage);
+
+            _dataProvider.CloseConnection();
         }
 
         [Command("role_income")]
@@ -184,10 +202,13 @@ namespace Example.Modules
         [Summary("Get an income for the roles you have on this server!")]        
         public async Task GetIncomes()
         {
+            _dataProvider.OpenConnection();
+
             if (!DatabaseController.Contexts.RnGConnections
                 .Any(connection => connection.GuildId == $"{Context.Guild.Id}"))
             {
                 await ReplyAsync("No roles with income on this server!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -206,7 +227,7 @@ namespace Example.Modules
             {
                 await ReplyAsync($"Wait {((int)TIMESPAN_FOR_INCOME - (int)timePassedFromLastEarning) / 60} hours" +
                     $" {((int)TIMESPAN_FOR_INCOME - (int)timePassedFromLastEarning) % 60} minutes!");
-
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -229,6 +250,8 @@ namespace Example.Modules
             databaseController.SaveContexts();
 
             await ReplyAsync(replyMessage);
+
+            _dataProvider.CloseConnection();
         }
 
         [Command("on_deposit")]
@@ -236,6 +259,8 @@ namespace Example.Modules
         [Summary("Put your coins on deposit!")]
         public async Task PutOnDeposit(int value)
         {
+            _dataProvider.OpenConnection();
+
             int idOfUnGConnection = DatabaseController.Contexts.UnGConnections
                 .Where(connection =>
                     connection.UserId == $"{Context.User.Id}" &&
@@ -247,6 +272,7 @@ namespace Example.Modules
                 ))
             {
                 await ReplyAsync("Error: You haven't earned coins on this server yet!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -258,12 +284,14 @@ namespace Example.Modules
             if (balance.AmountOfCoinsInCash == 0)
             {
                 await ReplyAsync("Error: You have no coins in cash!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             if (balance.AmountOfCoinsInCash < value)
             {
                 await ReplyAsync("Error: You don't have enough coins in cash!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -273,6 +301,8 @@ namespace Example.Modules
             await ReplyAsync("You've put your coins on deposit!");
 
             databaseController.SaveContexts();
+
+            _dataProvider.CloseConnection();
         }
 
         [Command("on_deposit")]
@@ -280,6 +310,8 @@ namespace Example.Modules
         [Summary("Put your coins on deposit!")]
         public async Task PutOnDeposit(string value)
         {
+            _dataProvider.OpenConnection();
+
             int idOfUnGConnection = DatabaseController.Contexts.UnGConnections
                 .Where(connection =>
                     connection.UserId == $"{Context.User.Id}" &&
@@ -291,12 +323,14 @@ namespace Example.Modules
                 ))
             {
                 await ReplyAsync("Error: You haven't earned coins on this server yet!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             if (value.ToLower() != "all")
             {
                 await ReplyAsync("Error: You have to enter a number or \"all\"");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -308,6 +342,7 @@ namespace Example.Modules
             if (balance.AmountOfCoinsInCash == 0)
             {
                 await ReplyAsync("Error: You have no coins in cash!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -317,6 +352,8 @@ namespace Example.Modules
             await ReplyAsync("You've put your coins on deposit!");
 
             databaseController.SaveContexts();
+
+            _dataProvider.CloseConnection();
         }
 
         [Command("in_cash")]
@@ -324,6 +361,8 @@ namespace Example.Modules
         [Summary("Take your coins from deposit!")]
         public async Task TakeFromDeposit(int value)
         {
+            _dataProvider.OpenConnection();
+
             int idOfUnGConnection = DatabaseController.Contexts.UnGConnections
                 .Where(connection =>
                    connection.UserId == $"{Context.User.Id}" &&
@@ -335,6 +374,7 @@ namespace Example.Modules
                 ))
             {
                 await ReplyAsync("Error: You haven't earned coins on this server yet!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -346,12 +386,14 @@ namespace Example.Modules
             if (balance.AmountOfCoinsOnDeposit == 0)
             {
                 await ReplyAsync("Error: You have no coins on deposit!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             if (balance.AmountOfCoinsOnDeposit < value)
             {
                 await ReplyAsync("Error: You don't have enough coins on deposit!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -361,6 +403,8 @@ namespace Example.Modules
             await ReplyAsync("You've taken your coins from deposit!");
 
             databaseController.SaveContexts();
+
+            _dataProvider.CloseConnection();
         }
 
         [Command("in_cash")]
@@ -368,6 +412,8 @@ namespace Example.Modules
         [Summary("Take your coins from deposit!")]
         public async Task TakeFromDeposit(string value)
         {
+            _dataProvider.OpenConnection();
+
             if (value.ToLower() != "all")
             {
                 await ReplyAsync("Error: You have to enter a number or \"all\"");
@@ -385,6 +431,7 @@ namespace Example.Modules
                 ))
             {
                 await ReplyAsync("Error: You haven't earned coins on this server yet!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -396,6 +443,7 @@ namespace Example.Modules
             if (balance.AmountOfCoinsOnDeposit == 0)
             {
                 await ReplyAsync("Error: You have no coins on deposit!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -405,6 +453,8 @@ namespace Example.Modules
             await ReplyAsync("You've taken your coins from deposit!");
 
             databaseController.SaveContexts();
+
+            _dataProvider.CloseConnection();
         }
 
         [Command("fuck_your_coins")]
@@ -413,9 +463,12 @@ namespace Example.Modules
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task VanishCoins(SocketGuildUser user)
         {
+            _dataProvider.OpenConnection();
+
             if (user == null)
             {
                 await ReplyAsync("Error: No such user!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -425,6 +478,7 @@ namespace Example.Modules
                 ))
             {
                 await ReplyAsync("Error: User hasn't earned coins on this server yet!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -444,7 +498,8 @@ namespace Example.Modules
             databaseController.SaveContexts();
 
             await ReplyAsync($"{user.Nickname}'s coins have been vanished!");
-            return;
+
+            _dataProvider.CloseConnection();
         }
 
         [Command("add_coins")]
@@ -453,9 +508,12 @@ namespace Example.Modules
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task AddCoins(SocketGuildUser user, int value)
         {
+            _dataProvider.OpenConnection();
+
             if (user == null)
             {
                 await ReplyAsync("Error: No such user!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -475,6 +533,8 @@ namespace Example.Modules
 
             await ReplyAsync($"Coins added to {user.Nickname}: {value}");            
             databaseController.SaveContexts();
+
+            _dataProvider.CloseConnection();
         }
 
         [Command("rob")]
@@ -482,9 +542,12 @@ namespace Example.Modules
         [Summary("Rob someone!")]
         public async Task Rob(SocketGuildUser user)
         {
+            _dataProvider.OpenConnection();
+
             if (user == null)
             {
                 await ReplyAsync("Error: No such user!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -494,6 +557,7 @@ namespace Example.Modules
                     connection.GuildId == $"{Context.Guild.Id}"))
             {
                 await ReplyAsync("Error: User hasn't earned coins on this server yet!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -520,6 +584,7 @@ namespace Example.Modules
             if (balanceToRob.AmountOfCoinsInCash == 0)
             {
                 await ReplyAsync("Error: User doesn't have coins in cash!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -531,6 +596,8 @@ namespace Example.Modules
             databaseController.SaveContexts();
 
             await ReplyAsync($"You successfully robbed {amountOfLootedCoins} coin(s) from {user.Nickname}!");
+            
+            _dataProvider.CloseConnection();
         }
 
         [Command("roulette")]
@@ -538,6 +605,8 @@ namespace Example.Modules
         [Summary("Play roulette!")]
         public async Task PlayRoulette(int betNumber, int betCoins)
         {
+            _dataProvider.OpenConnection();
+
             if (!DatabaseController.Contexts.UnGConnections.Any(
                 connection =>
                     connection.UserId == $"{Context.User.Id}" &&
@@ -545,12 +614,14 @@ namespace Example.Modules
                 ))
             {
                 await ReplyAsync("Error: You haven't earned coins on this server yet!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             if (betCoins < 1)
             {
                 await ReplyAsync("Error: Minimum bet is 1!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -567,12 +638,14 @@ namespace Example.Modules
             if (balance.AmountOfCoinsInCash < betCoins)
             {
                 await ReplyAsync("Error: You don't have enough coins in cash!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             if (betNumber > 36 && betNumber < 0)
             {
                 await ReplyAsync("Error: You can only bet on red, black or a positive number less than 37!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -587,6 +660,7 @@ namespace Example.Modules
                 databaseController.SaveContexts();
 
                 await ReplyAsync($"Congratulations! You've won {betCoins * 36}");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -597,12 +671,15 @@ namespace Example.Modules
                 databaseController.SaveContexts();
 
                 await ReplyAsync($"Congratulations! You've won {betCoins * 18}");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             databaseController.SaveContexts();
 
             await ReplyAsync($"You've lost! The ball landed on {rouletteResult}!");
+
+            _dataProvider.CloseConnection();
         }
 
         [Command("roulette")]
@@ -610,6 +687,8 @@ namespace Example.Modules
         [Summary("Play roulette!")]
         public async Task PlayRoulette(int betNumber, string value)
         {
+            _dataProvider.OpenConnection();
+
             if (!DatabaseController.Contexts.UnGConnections.Any(
                 connection =>
                     connection.UserId == $"{Context.User.Id}" &&
@@ -617,12 +696,14 @@ namespace Example.Modules
                 ))
             {
                 await ReplyAsync("Error: You haven't earned coins on this server yet!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             if (value.ToLower() != "all")
             {
                 await ReplyAsync("Error: You have to enter a number or \"all\"");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -639,12 +720,14 @@ namespace Example.Modules
             if (balance.AmountOfCoinsInCash == 0)
             {
                 await ReplyAsync("Error: You don't have coins in cash!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             if (betNumber > 36 && betNumber < 0)
             {
                 await ReplyAsync("Error: You can only bet on red, black or a positive number less than 37!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -660,6 +743,7 @@ namespace Example.Modules
                 databaseController.SaveContexts();
 
                 await ReplyAsync($"Congratulations! You've won {betCoins * 36}");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -670,12 +754,15 @@ namespace Example.Modules
                 databaseController.SaveContexts();
 
                 await ReplyAsync($"Congratulations! You've won {betCoins * 18}");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             databaseController.SaveContexts();
 
             await ReplyAsync($"You lost! The ball landed on {rouletteResult}");
+
+            _dataProvider.CloseConnection();
         }
 
         [Command("roulette")]
@@ -683,6 +770,8 @@ namespace Example.Modules
         [Summary("Play roulette!")]
         public async Task PlayRoulette(string betColour, int betCoins)
         {
+            _dataProvider.OpenConnection();
+
             if (!DatabaseController.Contexts.UnGConnections.Any(
                 connection =>
                     connection.UserId == $"{Context.User.Id}" &&
@@ -690,12 +779,14 @@ namespace Example.Modules
                 ))
             {
                 await ReplyAsync("Error: You haven't earned coins on this server yet!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             if (betCoins < 1)
             {
                 await ReplyAsync("Error: Minimum bet is 1!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -712,12 +803,14 @@ namespace Example.Modules
             if (balance.AmountOfCoinsInCash < betCoins)
             {
                 await ReplyAsync("Error: You don't have enough coins in cash!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             if (betColour.ToLower() != "red" && betColour.ToLower() != "black")
             {
                 await ReplyAsync("Error: You can only bet on red, black or a positive number less than 37!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -733,12 +826,15 @@ namespace Example.Modules
                 databaseController.SaveContexts();
 
                 await ReplyAsync($"Congratulations! You've won {betCoins * 2}");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             databaseController.SaveContexts();
 
             await ReplyAsync($"You've lost! The ball landed on {rouletteResult} {resultColour}!");
+            
+            _dataProvider.CloseConnection();
         }
 
         [Command("roulette")]
@@ -746,6 +842,8 @@ namespace Example.Modules
         [Summary("Play roulette!")]
         public async Task PlayRoulette(string betColour, string value)
         {
+            _dataProvider.OpenConnection();
+
             if (!DatabaseController.Contexts.UnGConnections.Any(
                 connection =>
                     connection.UserId == $"{Context.User.Id}" &&
@@ -753,12 +851,14 @@ namespace Example.Modules
                 ))
             {
                 await ReplyAsync("Error: You haven't earned coins on this server yet!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             if (value.ToLower() != "all")
             {
                 await ReplyAsync("Error: You have to enter a number or \"all\"");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -775,12 +875,14 @@ namespace Example.Modules
             if (balance.AmountOfCoinsInCash == 0)
             {
                 await ReplyAsync("Error: You don't have enough coins in cash!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             if (betColour.ToLower() != "red" && betColour.ToLower() != "black")
             {
                 await ReplyAsync("Error: You can only bet on red, black or a positive number less than 37!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -797,12 +899,15 @@ namespace Example.Modules
                 databaseController.SaveContexts();
 
                 await ReplyAsync($"Congratulations! You've won {betCoins * 2}");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             databaseController.SaveContexts();
 
             await ReplyAsync($"You've lost! The ball landed on {rouletteResult} {resultColour}!");
+            
+            _dataProvider.CloseConnection();
         }
 
         [Command("leaderboard")]
@@ -810,11 +915,14 @@ namespace Example.Modules
         [Summary("Check this server's leaderboard!")]
         public async Task CheckLeaderboard()
         {
+            _dataProvider.OpenConnection();
+
             if (!DatabaseController.Contexts.UnGConnections.Any(connection =>
                     connection.GuildId == $"{Context.Guild.Id}"
                 ))
             {
                 await ReplyAsync("Error: There is no players who've earned coins on this server!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -857,6 +965,8 @@ namespace Example.Modules
             }
 
             await ReplyAsync(leaderboardString);
+
+            _dataProvider.CloseConnection();
         }
 
         [Command("leaderboard")]
@@ -864,17 +974,21 @@ namespace Example.Modules
         [Summary("Check this server's leaderboard!")]
         public async Task CheckLeaderboard(string option)
         {
+            _dataProvider.OpenConnection();
+
             if (!DatabaseController.Contexts.UnGConnections.Any(connection =>
                     connection.GuildId == $"{Context.Guild.Id}"
                 ))
             {
                 await ReplyAsync("Error: There is no players who've earned coins on this server!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             if (option != "cash" && option != "dep" && option != "deposit")
             {
                 await ReplyAsync("Error: You have to enter \"cash\", \"dep\" or \"deposit\""!);
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -935,6 +1049,8 @@ namespace Example.Modules
             }
 
             await ReplyAsync(leaderboardString);
+
+            _dataProvider.CloseConnection();
         }
 
         [Command("blackjack")]
@@ -942,6 +1058,8 @@ namespace Example.Modules
         [Summary("Play blackjack!")]
         public async Task PlayBlackjack(int betCoins)
         {
+            _dataProvider.OpenConnection();
+
             if (!DatabaseController.Contexts.UnGConnections.Any(
                 connection =>
                     connection.UserId == $"{Context.User.Id}" &&
@@ -949,12 +1067,14 @@ namespace Example.Modules
                 ))
             {
                 await ReplyAsync("Error: You haven't earned coins on this server yet!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
             if (betCoins < 1)
             {
                 await ReplyAsync("Error: Minimum bet is 1!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -972,6 +1092,7 @@ namespace Example.Modules
             if (balance.AmountOfCoinsInCash < betCoins)
             {
                 await ReplyAsync("Error: You don't have enough coins in cash!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -1003,6 +1124,8 @@ namespace Example.Modules
             AddButtonToComponent(ref builder, standButton);
 
             await ReplyAsync(blackjackMessage, components: builder.Build());
+
+            _dataProvider.CloseConnection();
         }
 
         [Command("blackjack")]
@@ -1010,6 +1133,8 @@ namespace Example.Modules
         [Summary("Play blackjack!")]
         public async Task PlayBlackjack(string value)
         {
+            _dataProvider.OpenConnection();
+
             if (!DatabaseController.Contexts.UnGConnections.Any(
                 connection =>
                     connection.UserId == $"{Context.User.Id}" &&
@@ -1040,6 +1165,7 @@ namespace Example.Modules
             if (balance.AmountOfCoinsInCash == 0)
             {
                 await ReplyAsync("Error: You don't have enough coins in cash!");
+                _dataProvider.CloseConnection();
                 return;
             }
 
@@ -1072,6 +1198,8 @@ namespace Example.Modules
             AddButtonToComponent(ref builder, standButton);
 
             await ReplyAsync(blackjackMessage, components: builder.Build());
+
+            _dataProvider.CloseConnection();
         }
 
         #endregion

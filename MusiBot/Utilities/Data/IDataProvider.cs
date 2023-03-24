@@ -11,6 +11,7 @@ namespace MusiBotProd.Utilities.Data
         #region API methods description
 
         public void OpenConnection();
+        public void CloseConnection();
         public void SaveBalance(Balance balance);
         public void SaveGuild(Guild guild);
         public void SaveRnGConnection(RoleAndGuildConnection connection);

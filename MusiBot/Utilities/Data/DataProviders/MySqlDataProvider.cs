@@ -24,7 +24,8 @@ namespace MusiBotProd.Utilities.Data.DataProviders
                 try
                 {
                     databaseConnection = new MySqlConnection(connectionString);
-                    databaseConnection.Open();                    
+                    databaseConnection.Open();
+                    databaseConnection.Close();
                     break;
                 }
                 catch (Exception e)
@@ -42,6 +43,11 @@ namespace MusiBotProd.Utilities.Data.DataProviders
         public void OpenConnection()
         {
             databaseConnection.Open();
+        }
+
+        public void CloseConnection()
+        {
+            databaseConnection.Close();
         }
 
         public List<JObject> Get(string dbName, int dbColumnsCount)

@@ -57,7 +57,7 @@ namespace MusiBot.Services
             if (message.HasStringPrefix(_configuration["prefix"], ref index) ||
                 message.HasStringPrefix(_configuration["prefix"].ToUpper(), ref index) ||
                 message.HasMentionPrefix(_discordClient.CurrentUser, ref index))
-            {
+            {   
                 IResult result = await _commands.ExecuteAsync(commandContext, index, _serviceProvider);                
             }
         }

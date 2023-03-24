@@ -37,7 +37,7 @@ namespace MusiBot
             
             _configuration = configurationBuilder.Build();
             _dataProvider =
-                new MySqlDataProvider(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"));
+                new MySqlDataProvider(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"));            
         }
 
         #endregion
