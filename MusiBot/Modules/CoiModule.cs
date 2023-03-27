@@ -6,7 +6,7 @@ using MusiBotProd.Utilities.Data.Models;
 using MusiBotProd.Utilities.Visuals;
 using MusiBotProd.Utilities.Visuals.Buttons;
 
-namespace Example.Modules
+namespace MusiBot.Modules
 {
     [Name("Coi")]
     [RequireContext(ContextType.Guild)]
