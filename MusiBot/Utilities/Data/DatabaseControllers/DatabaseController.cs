@@ -1,12 +1,12 @@
 ﻿using MusiBotProd.Utilities.Data.Models;
 using Newtonsoft.Json.Linq;
 
-namespace MusiBotProd.Utilities.Data
+namespace MusiBotProd.Utilities.Data.DatabaseControllers
 {
     /// <summary>
     /// Database controller which interacts with database API
     /// </summary>
-    public class DatabaseController
+    public class DatabaseController : IDatabaseController
     {
         #region readonlies
 
@@ -41,39 +41,7 @@ namespace MusiBotProd.Utilities.Data
 
         #region API interaction methods
 
-        public void SaveContexts()
-        {
-            foreach (Balance balance in Contexts.Balances)
-            {
-                dataProvider.SaveBalance(balance);
-            }
-
-            foreach (Guild guild in Contexts.Guilds)
-            {
-                dataProvider.SaveGuild(guild);
-            }
-
-            foreach (User user in Contexts.Users)
-            {
-                dataProvider.SaveUser(user);
-            }
-
-            foreach (UserAndGuildConnection connection in Contexts.UnGConnections)
-            {
-                dataProvider.SaveUnGConnection(connection);
-            }
-
-            foreach (RoleAndGuildConnection connection in Contexts.RnGConnections)
-            {
-                dataProvider.SaveRnGConnection(connection);
-            }
-        }
-
-        #endregion
-
-        #region supporting methods
-
-        private void GetContexts()
+        public void GetContexts()
         {
             if (Contexts.Balances == null)
             {
@@ -141,6 +109,34 @@ namespace MusiBotProd.Utilities.Data
             }
         }
 
-        #endregion
+        public void SaveContexts()
+        {
+            foreach (Balance balance in Contexts.Balances)
+            {
+                dataProvider.SaveBalance(balance);
+            }
+
+            foreach (Guild guild in Contexts.Guilds)
+            {
+                dataProvider.SaveGuild(guild);
+            }
+
+            foreach (User user in Contexts.Users)
+            {
+                dataProvider.SaveUser(user);
+            }
+
+            foreach (UserAndGuildConnection connection in Contexts.UnGConnections)
+            {
+                dataProvider.SaveUnGConnection(connection);
+            }
+
+            foreach (RoleAndGuildConnection connection in Contexts.RnGConnections)
+            {
+                dataProvider.SaveRnGConnection(connection);
+            }
+        }
+
+        #endregion        
     }
 }

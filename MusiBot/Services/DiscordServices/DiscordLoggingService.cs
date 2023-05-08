@@ -2,13 +2,13 @@
 using Discord.Commands;
 using Discord.WebSocket;
 
-namespace MusiBot.Services
+namespace MusiBotProd.Services.DiscordServices
 {
     /// <summary>
     /// Service to log events
     /// </summary>
 
-    public class LoggingService
+    public class DiscordLoggingService
     {
         #region readonlies
 
@@ -22,11 +22,11 @@ namespace MusiBot.Services
         /// <summary>
         /// Auto-completed by dependency injection constructor 
         /// </summary>
-        public LoggingService(DiscordSocketClient discord, CommandService commands)
-        {            
+        public DiscordLoggingService(DiscordSocketClient discord, CommandService commands)
+        {
             _discord = discord;
             _commands = commands;
-            
+
             _discord.Log += OnLogAsync;
             _commands.Log += OnLogAsync;
         }
@@ -41,17 +41,17 @@ namespace MusiBot.Services
         private Task OnLogAsync(LogMessage msg)
         {
             string logDirectory = Path.Combine(AppContext.BaseDirectory, "logs");
-            string logFile = Path.Combine(logDirectory, $"{DateTime.UtcNow.ToString("yyyy-MM-dd")}.txt");            
+            string logFile = Path.Combine(logDirectory, $"{DateTime.UtcNow.ToString("yyyy-MM-dd")}.txt");
 
-            if (!Directory.Exists(logDirectory))     
+            if (!Directory.Exists(logDirectory))
                 Directory.CreateDirectory(logDirectory);
             if (!File.Exists(logFile))
                 File.Create(logFile).Dispose();
 
             string logText = $"{DateTime.UtcNow.ToString("hh:mm:ss")} [{msg.Severity}] {msg.Source}: {msg.Exception?.ToString() ?? msg.Message}";
-            File.AppendAllText(logFile, logText + "\n");     
+            File.AppendAllText(logFile, logText + "\n");
 
-            return Console.Out.WriteLineAsync(logText);       
+            return Console.Out.WriteLineAsync(logText);
         }
 
         #endregion

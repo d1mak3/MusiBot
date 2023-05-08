@@ -2,12 +2,12 @@
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 
-namespace MusiBot.Services
+namespace MusiBotProd.Services.DiscordServices
 {
     /// <summary>
     /// Service to manage commands
     /// </summary>
-    public class CommandsService
+    public class DiscordCommandsService
     {
         #region readonlies
 
@@ -23,7 +23,7 @@ namespace MusiBot.Services
         /// <summary>
         /// Auto-completed by dependency injection constructor 
         /// </summary>
-        public CommandsService(
+        public DiscordCommandsService(
             DiscordSocketClient discordClient,
             CommandService commands,
             IConfigurationRoot configuration,
@@ -53,12 +53,12 @@ namespace MusiBot.Services
 
             SocketCommandContext commandContext = new SocketCommandContext(_discordClient, message);
 
-            int index = 0;            
+            int index = 0;
             if (message.HasStringPrefix(_configuration["prefix"], ref index) ||
                 message.HasStringPrefix(_configuration["prefix"].ToUpper(), ref index) ||
                 message.HasMentionPrefix(_discordClient.CurrentUser, ref index))
-            {   
-                IResult result = await _commands.ExecuteAsync(commandContext, index, _serviceProvider);                
+            {
+                IResult result = await _commands.ExecuteAsync(commandContext, index, _serviceProvider);
             }
         }
 

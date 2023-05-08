@@ -2,17 +2,17 @@
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 
-namespace MusiBot.Services
+namespace MusiBotProd.Services.DiscordServices
 {
     /// <summary>
     /// Service to manage admin things
     /// </summary>
-    public class AdminService
+    public class DiscordAdminService
     {
         #region readonlies
 
-        private readonly DiscordSocketClient _discordClient;        
-        private readonly IConfigurationRoot _configuration;        
+        private readonly DiscordSocketClient _discordClient;
+        private readonly IConfigurationRoot _configuration;
 
         private readonly Dictionary<string, string> _emotesToRoles = new Dictionary<string, string>()
         {
@@ -35,14 +35,14 @@ namespace MusiBot.Services
         /// <summary>
         /// Auto-completed by dependency injection constructor 
         /// </summary>
-        public AdminService(DiscordSocketClient discordClient, IConfigurationRoot configuration)
+        public DiscordAdminService(DiscordSocketClient discordClient, IConfigurationRoot configuration)
         {
-            _discordClient = discordClient;            
-            _configuration = configuration;            
+            _discordClient = discordClient;
+            _configuration = configuration;
 
             _discordClient.ReactionAdded += OnRoleReactionAdded;
             _discordClient.ReactionRemoved += OnRoleReactionRemoved;
-            _discordClient.UserJoined += OnUserJoined;            
+            _discordClient.UserJoined += OnUserJoined;
         }
 
         #endregion
@@ -60,7 +60,7 @@ namespace MusiBot.Services
 
             if (reaction.MessageId != Convert.ToUInt64(_configuration["rolesmessageid"])) return;
 
-            SocketRole role = GetRoleByReaction(reaction);            
+            SocketRole role = GetRoleByReaction(reaction);
 
             await (reaction.User.Value as IGuildUser)!.AddRoleAsync(role);
         }
@@ -104,7 +104,7 @@ namespace MusiBot.Services
         /// </summary>
         private SocketRole GetRoleByReaction(SocketReaction reaction)
         {
-            string roleName = _emotesToRoles[reaction.Emote.Name];                     
+            string roleName = _emotesToRoles[reaction.Emote.Name];
 
             return _discordClient
                 .GetGuild(Convert.ToUInt64(_configuration["myguildid"]))

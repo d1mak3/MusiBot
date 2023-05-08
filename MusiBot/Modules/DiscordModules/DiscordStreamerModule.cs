@@ -5,7 +5,7 @@ using System.Net;
 namespace MusiBot.Modules
 {
     [Name("Stream")]
-    public class StreamerModule : ModuleBase<SocketCommandContext>
+    public class DiscordStreamerModule : ModuleBase<SocketCommandContext>
     {
         #region commands
 

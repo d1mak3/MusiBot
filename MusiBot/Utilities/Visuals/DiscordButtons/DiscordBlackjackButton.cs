@@ -1,14 +1,15 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using MusiBotProd.Utilities.Data;
+using MusiBotProd.Utilities.Data.DatabaseControllers;
 using MusiBotProd.Utilities.Data.Models;
 
-namespace MusiBotProd.Utilities.Visuals
+namespace MusiBotProd.Utilities.Visuals.DiscordButtons
 {
     /// <summary>
     /// Blackjack button definition
     /// </summary>
-    public abstract class BlackjackButton : IButton
+    public abstract class DiscordBlackjackButton : IButton
     {
         #region utilities
 
@@ -32,7 +33,7 @@ namespace MusiBotProd.Utilities.Visuals
 
         #region constructors
 
-        public BlackjackButton(string label = "", string customId = "",
+        public DiscordBlackjackButton(string label = "", string customId = "",
             ButtonStyle style = ButtonStyle.Success, IEmote emote = null,
             string url = "" , bool isDisabled = false, int row = 0)
         {

@@ -3,9 +3,9 @@ using Discord.Commands;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
 
-namespace MusiBot.Services
+namespace MusiBotProd.Services.DiscordServices
 {
-    public class StartupService
+    public class DiscordStartupService
     {
         #region readonlies
 
@@ -21,7 +21,7 @@ namespace MusiBot.Services
         /// <summary>
         /// Auto-completed by dependency injection constructor 
         /// </summary>
-        public StartupService(
+        public DiscordStartupService(
             IServiceProvider serviceProvider,
             DiscordSocketClient discordClient,
             CommandService commands,
@@ -31,7 +31,7 @@ namespace MusiBot.Services
             _serviceProvider = serviceProvider;
             _discordClient = discordClient;
             _commands = commands;
-            _configuration = configuration;            
+            _configuration = configuration;
         }
 
         #endregion
@@ -44,14 +44,14 @@ namespace MusiBot.Services
         public async Task ExecuteAsync()
         {
             string token = _configuration["token"];
-            
+
             if (string.IsNullOrWhiteSpace(token)) throw new Exception("Invalid token");
 
             await _discordClient.LoginAsync(Discord.TokenType.Bot, token);
             await _discordClient.StartAsync();
 
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _serviceProvider);
-        }        
+        }
 
         #endregion
     }

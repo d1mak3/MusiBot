@@ -1,16 +1,14 @@
-﻿using Discord;
-using Discord.WebSocket;
-using Microsoft.Extensions.Configuration;
+﻿using Discord.WebSocket;
 using MusiBotProd.Utilities.Data;
 using MusiBotProd.Utilities.Visuals;
-using MusiBotProd.Utilities.Visuals.Buttons;
+using MusiBotProd.Utilities.Visuals.DiscordButtons;
 
-namespace MusiBot.Services
+namespace MusiBotProd.Services.DiscordServices
 {
     /// <summary>
     /// Service to handle interactions
     /// </summary>
-    public class InteractionsService
+    public class DiscordInteractionsService
     {
         #region readonlies
 
@@ -22,7 +20,7 @@ namespace MusiBot.Services
 
         #region constructors
 
-        public InteractionsService(
+        public DiscordInteractionsService(
                 DiscordSocketClient discordClient,
                 IDataProvider dataProvider
             )
@@ -32,11 +30,11 @@ namespace MusiBot.Services
 
             _discordClient.ButtonExecuted += ButtonsClicksHandler;
 
-            BlackjackHitButton hitButton = new BlackjackHitButton();
+            DiscordBlackjackHitButton hitButton = new DiscordBlackjackHitButton();
             hitButton.DataProvider = _dataProvider;
             hitButton.DiscordClient = _discordClient;
 
-            BlackjackStandButton standButton = new BlackjackStandButton();
+            DiscordBlackjackStandButton standButton = new DiscordBlackjackStandButton();
             standButton.DataProvider = _dataProvider;
             standButton.DiscordClient = _discordClient;
 
@@ -50,7 +48,7 @@ namespace MusiBot.Services
 
         private async Task ButtonsClicksHandler(SocketMessageComponent component)
         {
-            foreach (BlackjackButton button in buttons)
+            foreach (DiscordBlackjackButton button in buttons)
             {
                 if (component.Data.CustomId == button.CustomId)
                 {

@@ -3,8 +3,12 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MusiBotProd.Services.DiscordServices;
 using MusiBotProd.Utilities.Data;
+using MusiBotProd.Utilities.Data.DatabaseControllers;
 using MusiBotProd.Utilities.Data.DataProviders;
+using MusiBotProd.Utilities.Games;
+using MusiBotProd.Utilities.Games.Coi;
 
 namespace MusiBot
 {
@@ -33,7 +37,7 @@ namespace MusiBot
             
             configurationBuilder = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
-            .AddYamlFile("config.yml");
+            .AddYamlFile(configFileName);
             
             _configuration = configurationBuilder.Build();
             _dataProvider =
@@ -68,12 +72,14 @@ namespace MusiBot
                 LogLevel = LogSeverity.Verbose,
                 DefaultRunMode = RunMode.Async
             }))
-            .AddSingleton<Services.CommandsService>()
-            .AddSingleton<Services.AdminService>()
-            .AddSingleton<Services.LoggingService>()
-            .AddSingleton<Services.InteractionsService>()
-            .AddSingleton<Services.StartupService>()
-            .AddSingleton(_configuration)
+            .AddSingleton<DiscordCommandsService>()
+            .AddSingleton<DiscordAdminService>()
+            .AddSingleton<DiscordLoggingService>()
+            .AddSingleton<DiscordInteractionsService>()
+            .AddSingleton<DiscordStartupService>()
+            .AddTransient<ICoiGame, DiscordCoiGame>()
+            .AddTransient<IDatabaseController, DatabaseController>()
+            .AddSingleton(_configuration)            
             .AddSingleton(_dataProvider);
         }
 
@@ -86,12 +92,12 @@ namespace MusiBot
             ConfigureServices(services);
 
             ServiceProvider serviceProvider = services.BuildServiceProvider();
-            serviceProvider.GetRequiredService<Services.CommandsService>();
-            serviceProvider.GetRequiredService<Services.AdminService>();
-            serviceProvider.GetRequiredService<Services.LoggingService>();
-            serviceProvider.GetRequiredService<Services.InteractionsService>();
+            serviceProvider.GetRequiredService<DiscordCommandsService>();
+            serviceProvider.GetRequiredService<DiscordAdminService>();
+            serviceProvider.GetRequiredService<DiscordLoggingService>();
+            serviceProvider.GetRequiredService<DiscordInteractionsService>();
 
-            await serviceProvider.GetRequiredService<Services.StartupService>().ExecuteAsync();
+            await serviceProvider.GetRequiredService<DiscordStartupService>().ExecuteAsync();
             await Task.Delay(-1);
         }
 

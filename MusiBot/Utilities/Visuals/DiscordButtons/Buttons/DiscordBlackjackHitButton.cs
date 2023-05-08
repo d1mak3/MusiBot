@@ -1,16 +1,16 @@
 ﻿using Discord;
 
-namespace MusiBotProd.Utilities.Visuals.Buttons
+namespace MusiBotProd.Utilities.Visuals.DiscordButtons
 {
     /// <summary>
-    /// Blackjack stand button
+    /// Blackjack hit button 
     /// </summary>
-    public class BlackjackStandButton : BlackjackButton
+    public class DiscordBlackjackHitButton : DiscordBlackjackButton
     {
         #region constructors
 
-        public BlackjackStandButton() 
-            : base(label: "Stand", customId: "blackjack-standed", style: ButtonStyle.Danger)
+        public DiscordBlackjackHitButton() 
+            : base(label: "Hit", customId: "blackjack-hit", style: ButtonStyle.Success)
         {
             
         }
@@ -24,7 +24,7 @@ namespace MusiBotProd.Utilities.Visuals.Buttons
             if (MessageComponent == null)
             {
                 LogError("Error: Message of hit button was deleted");
-
+                
                 return Task.CompletedTask;
             }
 
@@ -33,7 +33,7 @@ namespace MusiBotProd.Utilities.Visuals.Buttons
 
             string message = MessageComponent.Message.Content;
             message = message.Replace("\n", " ");
-
+            
             string[] splittedMessage = message.Split(" ");
 
             int i = 0;
@@ -51,7 +51,7 @@ namespace MusiBotProd.Utilities.Visuals.Buttons
                 {
                     try
                     {
-                        userHand = Int32.Parse(msg);
+                        userHand = Int32.Parse(msg);                        
                     }
                     catch
                     { }
@@ -80,7 +80,7 @@ namespace MusiBotProd.Utilities.Visuals.Buttons
                     }
                     catch
                     { }
-                }
+                }                
             }
 
             i = splittedMessage.Length - 1;
@@ -93,46 +93,44 @@ namespace MusiBotProd.Utilities.Visuals.Buttons
 
             splittedMessage = guildName.Split(" ");
             Array.Reverse(splittedMessage);
-            guildName = string.Join(" ", splittedMessage).Trim();
+            guildName = string.Join(" ", splittedMessage).Trim();                     
 
             int newCardValue = Random.Shared.Next(1, 10);
 
-            if (newCardValue == 1 && dealerHand + 11 <= 21)
+            if (newCardValue == 1 && userHand + 11 <= 21)
             {
                 newCardValue = 11;
             }
 
-            while (dealerHand + newCardValue <= 21)
-            {
-                dealerHand += newCardValue;
-                newCardValue = Random.Shared.Next(1, 10);
-            }
+            userHand += newCardValue;
 
-            if (dealerHand < userHand)
+            if (userHand == 21)
             {
                 GiveCoinsToUser(userName, guildName, betCoins * 2);
 
-                MessageComponent.RespondAsync($"Dealer busted! {userName} won {betCoins * 2}");
-                MessageComponent.Message.DeleteAsync();
+                MessageComponent.RespondAsync($"Blackjack! {userName} won {betCoins * 2}");
+                MessageComponent.Message.DeleteAsync();                
 
                 return Task.CompletedTask;
             }
 
-            if (dealerHand > userHand)
+            if (userHand > 21)
             {
-                MessageComponent.RespondAsync($"Dealer got {dealerHand}\n" +
-                        $"{userName} got {userHand}!\n{userName} lost {betCoins}");
+                MessageComponent.RespondAsync($"Busted! {userName} lost {betCoins}");
                 MessageComponent.Message.DeleteAsync();
 
                 return Task.CompletedTask;
             }
+
+            MessageComponent.UpdateAsync(message => message.Content = $"{userName} hand: {userHand}\n" +
+                $"Dealers hand: {dealerHand}\nBet is: {betCoins}\nGuild: {guildName}");
 
             return Task.CompletedTask;
         }
 
         #endregion
 
-        #region supporting methonds
+        #region supporting methods
 
         private void LogError(string error)
         {
