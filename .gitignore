@@ -1,5 +1,6 @@
 # directories
 .vs/
+.vscode/
 MusiBot/bin/
 MusiBot/obj/
 SQL/data/
